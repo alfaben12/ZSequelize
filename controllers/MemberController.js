@@ -53,6 +53,18 @@ module.exports = {
 		});
 	},
 
+	processMultiDelete: async function(req, res) {
+		let idone = req.params.idone;
+		let idtwo = req.params.idtwo;
+		
+		let where = {'id': [idone, idtwo]};
+		let result = await ZSequelize.destroyValues(where, 'MemberModel');
+		res.status(200).json({
+			message: 'Success DELETE.',
+			data : result
+		});
+	},
+
 	processGetMember: async function(req, res) {
 		let field = ['id', [ Sequelize.fn('count', Sequelize.col('id')), 'count_same_name' ], 'name'];
 		let where = {
