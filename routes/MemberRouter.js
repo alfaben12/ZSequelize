@@ -17,6 +17,11 @@ router.delete(
 	MemberController.processDelete
 );
 
+router.delete(
+	'/processMultiDelete/:idone/:idtwo',
+	MemberController.processMultiDelete
+);
+
 router.get(
 	'/processGetMember/',
 	MemberController.processGetMember
