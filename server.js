@@ -10,5 +10,4 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/', MemberRouter);
 
-
 app.listen(port, () => console.log(`Example app listening on port ` + process.env.RUN_PORT));

@@ -3,21 +3,15 @@ const sequelize = require('../config/db');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const Member = sequelize.define(
-	'member',
+const Role = sequelize.define(
+	'role',
 	{
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
-		},
-		roleid: {
-			type: Sequelize.INTEGER,
-		},
+        },
 		name: {
-			type: Sequelize.STRING(255)
-		},
-		password: {
 			type: Sequelize.STRING(255)
 		},
 		createdAt: {
@@ -37,4 +31,4 @@ const Member = sequelize.define(
 	}
 );
 
-module.exports = Member;
+module.exports = Role;
