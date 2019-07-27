@@ -92,7 +92,7 @@ or download on repository https://github.com/alfaben12/ZSequelize.
         ];
         let groupBy = ['name'];
         let model = 'MemberModel';
-        let result = await ZSequelize.fetch(field, where, orderBy, groupBy, model);
+        let result = await ZSequelize.fetch(false, field, where, orderBy, groupBy, model);
         res.status(200).json({
             message: 'Success GET.',
             data: result
