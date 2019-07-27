@@ -43,12 +43,13 @@ module.exports = {
 	},
 
 	processDelete: async function(req, res) {
-		let id = req.params.id;
+		let idone = req.params.idone;
+		let idtwo = req.params.idtwo;
 		
-		let where = {'id': id};
-		let result = await ZSequelize.destroyValues(where, 'MemberModel');
+		let where = {'id': [idone, idtwo]};
+		let result = await ZSequelize.destroyMultiValues(where, 'MemberModel');
 		res.status(200).json({
-			message: 'Success DELETE.',
+			message: 'Success Multi DELETE.',
 			data : result
 		});
 	},
@@ -73,7 +74,20 @@ module.exports = {
 		let orderBy = [['id', 'DESC']];
 		let groupBy = ['name'];
 		let model = 'MemberModel';
-		let result = await ZSequelize.fetch(field, where, orderBy, groupBy, model);
+		let result = await ZSequelize.fetch(false, field, where, orderBy, groupBy, model);
+		res.status(200).json({
+			message: 'Success GET.',
+			data : result
+		});
+	},
+
+	processGetAllMember: async function(req, res) {
+		let field = ['id', [ Sequelize.fn('count', Sequelize.col('id')), 'count_same_name' ], 'name'];
+		let where = false;
+		let orderBy = [['id', 'DESC']];
+		let groupBy = ['name'];
+		let model = 'MemberModel';
+		let result = await ZSequelize.fetch(true, field, where, orderBy, groupBy, model);
 		res.status(200).json({
 			message: 'Success GET.',
 			data : result
