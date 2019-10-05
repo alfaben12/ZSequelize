@@ -31,7 +31,6 @@
  * @filesource
  */
 
-
 const Sequelize = require('sequelize');
 
 exports.insertValues = function(values, modelName) {
@@ -66,7 +65,7 @@ exports.destroyValues = function(anyWhere, modelName) {
 
 exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName) {
 	if (anyField[0] == '*') {
-		anyField = ['*'];
+		anyField = {};
 	}else{
 		if (!Array.isArray(anyField)) {
 			console.error('Value must contain an array.');
@@ -139,7 +138,7 @@ exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelNam
 
 exports.fetchJoins = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName, modelJoins) {
 	if (anyField[0] == '*') {
-		anyField = ['*'];
+		anyField = {};
 	}else{
 		if (!Array.isArray(anyField)) {
 			console.error('Value must contain an array.');
