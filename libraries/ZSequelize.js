@@ -1,5 +1,3 @@
-const Sequelize = require('sequelize');
-
 /**
  * ZSqequelize
  *
@@ -33,6 +31,9 @@ const Sequelize = require('sequelize');
  * @filesource
  */
 
+
+const Sequelize = require('sequelize');
+
 exports.insertValues = function(values, modelName) {
     const Model = require('../models/'+ modelName);
     return new Promise((resolve, reject) => {
@@ -58,17 +59,21 @@ exports.destroyValues = function(anyWhere, modelName) {
     return new Promise((resolve, reject) => {
 		Model
             .destroy({where: anyWhere})
-			.then((result) => resolve({result: result == 1 ? true : false}))
+			.then((result) => resolve({result: result > 0 ? true : false}))
 			.catch((err) => reject(err));
 	});
 };
 
 exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName) {
-	if (!Array.isArray(anyField)) {
-		console.error('Value must contain an array.');
-		anyField = false;
+	if (anyField[0] == '*') {
+		anyField = ['*'];
 	}else{
-		anyField = anyField;
+		if (!Array.isArray(anyField)) {
+			console.error('Value must contain an array.');
+			anyField = false;
+		}else{
+			anyField = anyField;
+		}
 	}
 
 	if (anyWhere === false) {
@@ -107,7 +112,8 @@ exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelNam
 					group : groupBy
 				  })
 				.then((result) => resolve({
-					result: result === null ? 0 : 1,
+					result: result !== null ? true : false,
+					joinFind : 'Fetch One',
 					dataValues: result,
 				}))
 				.catch((err) => reject(err));
@@ -122,7 +128,8 @@ exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelNam
 				group : groupBy
 			  })
 			.then((result) => resolve({
-				result: result.length > 0 ? 1 : 0,
+				result: result.length > 0 ? true : false,
+				joinFind : 'Fetch All',
 				dataValues: result
 			}))
 			.catch((err) => reject(err));
@@ -130,20 +137,22 @@ exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelNam
 	}
 };
 
-exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, modelJoins) {
-	if (!Array.isArray(anyField)) {
-		console.error('The value must contain the specified array and object.');
-		process.exit();
+exports.fetchJoins = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName, modelJoins) {
+	if (anyField[0] == '*') {
+		anyField = ['*'];
 	}else{
-		anyField = anyField;
+		if (!Array.isArray(anyField)) {
+			console.error('Value must contain an array.');
+			anyField = false;
+		}else{
+			anyField = anyField;
+		}
 	}
 
 	if (anyWhere === false) {
 		anyWhere = '';
-		findAll = true;
 	}else{
 		anyWhere = anyWhere;
-		findAll = false;
 	}
 
 	if (orderBy === false) {
@@ -189,9 +198,11 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 		let where_object = {};
 		where_object[modelJoins[join_number][0].toKey] = Sequelize.col(modelJoins[join_number][0].fromKey);
 
+		let required = modelJoins[join_number][0].required;
 		include_object['attributes'] = modelJoins[join_number][0].attributes;
 		include_object['model'] = ModelTwo;
 		include_object['where'] = where_object;
+		include_object['required'] = required;
 		
 		includes.push(include_object);
 	}
@@ -209,7 +220,7 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 					group : groupBy
 				})
 				.then((result) => resolve({
-					result: result !== null ? 1 : 0,
+					result: result !== null ? true : false,
 					joinFind : 'Fetch One',
 					dataValues: result === null ? [] : result
 				}))
@@ -220,12 +231,13 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 			Model
 				.findAll({
 					attributes: anyField,
+					where: anyWhere,
 					include: includes,
 					order: orderBy,
 					group : groupBy
 				})
 				.then((result) => resolve({
-					result: result !== null ? 1 : 0,
+					result: result !== null ? true : false,
 					joinFind : 'Fetch All',
 					dataValues: result === null ? [] : result
 				}))
