@@ -13,6 +13,9 @@ const MemberDetail = sequelize.define(
         },
         member_id: {
 			type: Sequelize.INTEGER,
+		},
+		roleid: {
+			type: Sequelize.INTEGER,
         },
 		first_name: {
 			type: Sequelize.STRING(255)

@@ -8,6 +8,10 @@ const MemberRouter = require('./routes/MemberRouter');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', MemberRouter);
+// app.use('/', function(req, res){
+//     res.json("Hello World!")
+// });
+
+app.use('/members', MemberRouter);
 
 app.listen(port, () => console.log(`Example app listening on port ` + process.env.RUN_PORT));

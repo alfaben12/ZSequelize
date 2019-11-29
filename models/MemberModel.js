@@ -11,14 +11,13 @@ const Member = sequelize.define(
 			primaryKey: true,
 			autoIncrement: true
 		},
-		roleid: {
-			type: Sequelize.INTEGER,
-		},
 		name: {
-			type: Sequelize.STRING(255)
+			type: Sequelize.STRING(255),
+			allowNull: false
 		},
 		password: {
-			type: Sequelize.STRING(255)
+			type: Sequelize.STRING(255),
+			allowNull: false
 		},
 		createdAt: {
 			type: 'TIMESTAMP',

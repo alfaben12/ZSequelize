@@ -3,17 +3,17 @@ const router = express.Router();
 const MemberController = require('../controllers/MemberController');
 
 router.post(
-	'/processAdd/',
+	'/',
 	MemberController.processAdd
 );
 
 router.put(
-	'/processEdit/:id',
+	'/:id',
 	MemberController.processUpdate
 );
 
 router.delete(
-	'/processDelete/:id',
+	'/:id',
 	MemberController.processDelete
 );
 
@@ -30,6 +30,10 @@ router.get(
 router.get(
 	'/processGetMemberArticlesRole/',
 	MemberController.processGetMemberArticlesRole
+);
+router.get(
+	'/nestedjoins/',
+	MemberController.nestedJoins
 );
 
 module.exports = router;
