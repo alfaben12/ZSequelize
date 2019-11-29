@@ -20,7 +20,7 @@ module.exports = {
 			transaction = await sequelize.transaction();
 			let result = await ZSequelize.insertValues(value, 'MemberModel');
 			await transaction.commit();
-
+			
 			res.status(200).json({
 				message: 'Success POST.',
 				data : result
@@ -150,7 +150,7 @@ module.exports = {
 			data : result
 		});
 	},
-
+	
 	nestedJoins: async function(req, res) {
 		let field = ['id'];
 		let where = {
@@ -170,19 +170,57 @@ module.exports = {
 					'attributes' : ['id', 'first_name', 'last_name'],
 					'required': true,
 					'includes': [
-						{
-							'fromModel' : 'MemberDetailModel',
-							'fromKey' : 'roleid',
-							'bridgeType' : 'belongsTo',
-							'toModel' : 'RoleModel',
-							'toKey' : 'id',
-							'attributes' : ['id', 'name'],
-							'required': true,
-							'includes' : false
-						}
+						[
+							{
+								'fromModel' : 'MemberDetailModel',
+								'fromKey' : 'roleid',
+								'bridgeType' : 'belongsTo',
+								'toModel' : 'RoleModel',
+								'toKey' : 'id',
+								'attributes' : ['id', 'name'],
+								'required': true,
+								'includes' : false
+							}
+						],
+						[
+							{
+								'fromModel' : 'MemberDetailModel',
+								'fromKey' : 'planid',
+								'bridgeType' : 'belongsTo',
+								'toModel' : 'PlanModel',
+								'toKey' : 'id',
+								'attributes' : ['id', 'name'],
+								'required': true,
+								'includes' : false
+							}
+						],
+					]
+				}
+			],
+			[
+				{
+					'fromModel' : 'MemberModel',
+					'fromKey' : 'member.id',
+					'bridgeType' : 'hasMany',
+					'toModel' : 'ArticleModel',
+					'toKey' : 'memberid',
+					'attributes' : ['title', 'body'],
+					'includes': [
+						[
+							{
+								'fromModel' : 'ArticleModel',
+								'fromKey' : 'categoryid',
+								'bridgeType' : 'belongsTo',
+								'toModel' : 'CategoryModel',
+								'toKey' : 'id',
+								'attributes' : ['*'],
+								'required': true,
+								'includes' : false
+							}
+						]
 					],
 				}
-			]
+			],
 		];
 		let result = await ZSequelize.fetchJoins(true, field, where, orderBy, groupBy, model, joins);
 		return res.json(result)

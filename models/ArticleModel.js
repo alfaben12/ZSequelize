@@ -14,6 +14,9 @@ const Article = sequelize.define(
         memberid: {
 			type: Sequelize.INTEGER
 		},
+		categoryid: {
+			type: Sequelize.INTEGER
+		},
 		title: {
 			type: Sequelize.STRING(255)
 		},
