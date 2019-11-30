@@ -1,4 +1,11 @@
 const MemberModel = require('../models/MemberModel');
+const MemberDetailModel = require('../models/MemberDetailModel');
+const RoleModel = require('../models/RoleModel');
+const PlanModel = require('../models/PlanModel');
+const StatusModel = require('../models/StatusModel');
+const ArticleModel = require('../models/ArticleModel');
+const PlanDetailModel = require('../models/PlanDetailModel');
+
 const ZSequelize = require('../libraries/ZSequelize');
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
@@ -152,77 +159,63 @@ module.exports = {
 	},
 	
 	nestedJoins: async function(req, res) {
+		MemberModel.hasOne(MemberDetailModel, {foreignKey:'memberid', targetKey: 'id'})
+		MemberDetailModel.belongsTo(PlanModel, {foreignKey:'planid'})
+		MemberDetailModel.belongsTo(RoleModel, {foreignKey:'roleid'})
+		PlanModel.belongsTo(StatusModel, {foreignKey:'statusid'})
+		MemberModel.hasMany(ArticleModel, {foreignKey: 'memberid'})
+		PlanModel.belongsTo(PlanDetailModel, {foreignKey:'plan_detailid'})
+
 		let field = ['id'];
 		let where = {
-			id: 1
+			name: 'Riqqqq1'
 		};
 		let orderBy = false;
 		let groupBy = false;
 		let model = 'MemberModel'
+		
 		let joins = [
-			[
-				{
-					'fromModel' : 'MemberModel',
-					'fromKey' : 'member.id',
-					'bridgeType' : 'hasOne',
-					'toModel' : 'MemberDetailModel',
-					'toKey' : 'memberid',
-					'attributes' : ['id', 'first_name', 'last_name'],
-					'required': true,
-					'includes': [
-						[
+			{ 
+				attributes: {},
+				model: MemberDetailModel,
+				// where: {memberid : 'id'},
+				required: true,
+				include: [
+					{
+						attributes: {},
+						model: RoleModel, 
+						required: true
+					},
+					{
+						attributes: {},
+						model: PlanModel, 
+						// where: {id: 'roleid'},
+						required: true,
+						include: [
 							{
-								'fromModel' : 'MemberDetailModel',
-								'fromKey' : 'roleid',
-								'bridgeType' : 'belongsTo',
-								'toModel' : 'RoleModel',
-								'toKey' : 'id',
-								'attributes' : ['id', 'name'],
-								'required': true,
-								'includes' : false
-							}
-						],
-						[
+								attributes: {},
+								model: StatusModel, 
+								// where: {id: 'roleid'},
+								required: true
+							},
 							{
-								'fromModel' : 'MemberDetailModel',
-								'fromKey' : 'planid',
-								'bridgeType' : 'belongsTo',
-								'toModel' : 'PlanModel',
-								'toKey' : 'id',
-								'attributes' : ['id', 'name'],
-								'required': true,
-								'includes' : false
-							}
-						],
-					]
-				}
-			],
-			[
-				{
-					'fromModel' : 'MemberModel',
-					'fromKey' : 'member.id',
-					'bridgeType' : 'hasMany',
-					'toModel' : 'ArticleModel',
-					'toKey' : 'memberid',
-					'attributes' : ['title', 'body'],
-					'includes': [
-						[
-							{
-								'fromModel' : 'ArticleModel',
-								'fromKey' : 'categoryid',
-								'bridgeType' : 'belongsTo',
-								'toModel' : 'CategoryModel',
-								'toKey' : 'id',
-								'attributes' : ['*'],
-								'required': true,
-								'includes' : false
+								attributes: {},
+								model: PlanDetailModel, 
+								// where: {id: 'roleid'},
+								required: false
 							}
 						]
-					],
-				}
-			],
-		];
-		let result = await ZSequelize.fetchJoins(true, field, where, orderBy, groupBy, model, joins);
+					}
+				]
+			},
+			{ 
+				attributes: {},
+				model: ArticleModel,
+				// where: {memberid : 'id'},
+				required: false,
+			}
+		]
+		let result = await ZSequelize.fetchJoins(false, field, where, orderBy, groupBy, model, joins);
 		return res.json(result)
 		res.status(200).json({
 			message: 'Success GET.',

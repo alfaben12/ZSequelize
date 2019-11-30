@@ -3,37 +3,22 @@ const sequelize = require('../config/db');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const MemberDetail = sequelize.define(
-	'member_detail',
+const Role = sequelize.define(
+	'plan_detail',
 	{
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
         },
-        memberid: {
-			type: Sequelize.INTEGER,
-		},
-		roleid: {
-			type: Sequelize.INTEGER,
-		},
-		planid: {
-			type: Sequelize.INTEGER,
-		},
-		first_name: {
+		name: {
 			type: Sequelize.STRING(255)
         },
-        middle_name: {
-			type: Sequelize.STRING(255)
+        iddata: {
+			type: Sequelize.INTEGER
         },
-        last_name: {
-			type: Sequelize.STRING(255)
-        },
-        address: {
-			type: Sequelize.STRING(255)
-        },
-        job: {
-			type: Sequelize.STRING(255)
+        dataid: {
+			type: Sequelize.INTEGER
 		},
 		createdAt: {
 			type: 'TIMESTAMP',
@@ -52,4 +37,4 @@ const MemberDetail = sequelize.define(
 	}
 );
 
-module.exports = MemberDetail;
+module.exports = Role;

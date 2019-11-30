@@ -14,6 +14,14 @@ const Category = sequelize.define(
 		name: {
 			type: Sequelize.STRING(255)
 		},
+		statusid: {
+			type: Sequelize.INTEGER,
+
+		},
+		plan_detailid: {
+			type: Sequelize.INTEGER,
+
+		},
 		createdAt: {
 			type: 'TIMESTAMP',
 			defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
